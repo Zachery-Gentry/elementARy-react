@@ -25,7 +25,9 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   margin: `0 0 ${grid}px 0`,
 
   // change background colour if dragging
-  background: isDragging ? 'lightgreen' : '#f0ad4e',
+  background: isDragging ? '#FFC74D' : '#EDB230',
+  borderRadius: 8,
+  color: 'white',
 
   // styles we need to apply on draggables
   ...draggableStyle,
@@ -33,31 +35,33 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 var maze = '1';
 const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? 'lightblue' : '#ffffb0',
+  background: isDraggingOver ? 'lightblue' : '#0075C4',
   padding: grid,
   width: 250,
+  borderRadius: 4,
+  boxShadow: 'rgba(0,0,0,.05) 0 12px 40px 0'
 });
 
 const COMMANDS = {
   forward: {
     icon: '??',
-    content: 'GO FORWARD',
+    content: 'Move Forward',
     label: 'forward'
   },
 
   left: {
     icon: '??',
-    content: 'TURN LEFT',
+    content: 'Turn Left',
     label: 'left'
   },
   right: {
     icon: '??',
-    content: 'TURN RIGHT',
+    content: 'Turn Right',
     label: 'right'
   },
   switch: {
     icon: '??',
-    content: 'FLIP SWITCH',
+    content: 'Flip Switch',
     label: 'switch'
   }
 };
@@ -197,7 +201,22 @@ class App extends Component {
         </Jumbotron>
       </div> */}
         <Container fluid>
-          <Row>
+          <Row className="py-4">
+            <Col md="6">
+              <h5>Choose Maze</h5>
+              <ButtonGroup>
+              <Button color = "info"onClick={this.mazeClick1} active={this.state.cSelected.includes(1)}>One</Button>
+                <Button color="info" onClick={this.mazeClick2} active={this.state.cSelected.includes(2)}>Two</Button>
+                <Button color="info" onClick={this.mazeClick3} active={this.state.cSelected.includes(3)}>Three</Button>
+              </ButtonGroup>
+            </Col>
+            <Col md="6" className="text-right">
+              <h5>Actions</h5>
+                <Button onClick={this.handleClick} color="info">Upload Instructions</Button>{' '}{' '}{' '}
+                <Button onClick={this.deleteClick} color="danger">Remove All Actions</Button>
+            </Col>
+          </Row>
+          <Row className="pt-4">
             <DragDropContext onDragEnd={this.onDragEnd}>
               <Col md={3}>
                 <Droppable droppableId="commands">
@@ -206,7 +225,7 @@ class App extends Component {
                       ref={provided.innerRef}
                       style={getListStyle(snapshot.isDraggingOver)}
                     >
-                      Commands
+                      <div className="title">Commands</div>
                       {this.state.commands.map((item, index) => (
                         <Draggable key={item.id} draggableId={item.id} index={index}>
                           {(provided, snapshot) => (
@@ -230,12 +249,6 @@ class App extends Component {
                     </div>
                   )}
                 </Droppable>
-                <h5>Choose Maze:</h5>
-        <ButtonGroup>
-        <Button color = "info"onClick={this.mazeClick1} active={this.state.cSelected.includes(1)}>One</Button>
-          <Button color="info" onClick={this.mazeClick2} active={this.state.cSelected.includes(2)}>Two</Button>
-          <Button color="info" onClick={this.mazeClick3} active={this.state.cSelected.includes(3)}>Three</Button>
-        </ButtonGroup>
               </Col>
               <Col md={9}>
                 <Droppable droppableId="callstack">
@@ -248,7 +261,7 @@ class App extends Component {
                       width: null
                     }}
                     >
-                      <div>Instructions</div>
+                      <div className="title">Instructions</div>
                       {/* {console.log(provided, snapshot)} */}
                       {this.state.actions.map((item, index) => (
                         <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -274,19 +287,10 @@ class App extends Component {
                     </div>
                   )}
                 </Droppable>
-                <div className="App-button text-center" >
-                <Button onClick={this.handleClick} color="info">Update!</Button>{' '}{' '}{' '}
-                <Button onClick={this.deleteClick} color="danger">Remove All Actions</Button>
-                </div>
               </Col>
             </DragDropContext>
          </Row>
         </Container>
-        <div>
-          <Jumbotron style={mainStyle}>
-
-            </Jumbotron>
-          </div>
       </div>
 
     );
