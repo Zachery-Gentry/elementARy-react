@@ -6,6 +6,7 @@ import { Container, Row, Col, Button, ButtonGroup, Jumbotron } from 'reactstrap'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import fire from './fire';
 import Nav from './Nav';
+import Tutorial from './Tutorial';
 
 
 const reorder = (list, startIndex, endIndex) => {
@@ -84,7 +85,8 @@ class App extends Component {
   state = {
     commands: Object.keys(COMMANDS).map(k => ({ id: k, ...COMMANDS[k] })),
     actions: [],
-    cSelected: []
+    cSelected: [],
+    showInstructions: false
   };
 
 
@@ -182,13 +184,15 @@ class App extends Component {
       });
     }
   }
-  
+
+  onShowInstructions = () => this.setState({ showInstructions: true });
+  onCloseInstructions = () => this.setState({ showInstructions: false });
 
   
   render() {
     return (
       <div className="app">
-        <Nav />
+        <Nav onShowInstructions={this.onShowInstructions} />
        {/* <div>
          <Jumbotron>
         <Container fluid>
@@ -261,7 +265,7 @@ class App extends Component {
                       width: null
                     }}
                     >
-                      <div className="title">Instructions</div>
+                      <div className="title">Mouse Instructions</div>
                       {/* {console.log(provided, snapshot)} */}
                       {this.state.actions.map((item, index) => (
                         <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -291,6 +295,10 @@ class App extends Component {
             </DragDropContext>
          </Row>
         </Container>
+        <Tutorial
+          isOpen={this.state.showInstructions}
+          onClose={this.onCloseInstructions}
+        />
       </div>
 
     );
