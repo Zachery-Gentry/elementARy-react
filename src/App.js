@@ -5,6 +5,7 @@ import './App.css';
 import { Container, Row, Col, Button, ButtonGroup, Jumbotron } from 'reactstrap';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import fire from './fire';
+import Nav from './Nav';
 
 
 const reorder = (list, startIndex, endIndex) => {
@@ -174,16 +175,17 @@ class App extends Component {
   
   render() {
     return (
-      <div className="app" style={mainStyle}>
-       <div>
-         <Jumbotron style={jumboStyle}>
+      <div className="app">
+        <Nav />
+       {/* <div>
+         <Jumbotron>
         <Container fluid>
           <h2 className="display-3">Where's My CheddAR?</h2>
           <p className="lead">Instructions:</p>
           <p>Drag and drop to make the mouse move!</p>
         </Container>
         </Jumbotron>
-      </div>
+      </div> */}
         <Container fluid>
           <Row>
             <DragDropContext onDragEnd={this.onDragEnd}>
