@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import { ToastContainer, toast } from 'react-toastify';
 import { Container, Row, Col, Button, ButtonGroup, Jumbotron } from 'reactstrap';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import fire from './fire';
@@ -100,6 +101,10 @@ class App extends Component {
 
     fire.database().ref('World/Maze' + maze).set({
     op1: Directionstring
+    });
+
+    toast.success("Uploaded Successfully!", {
+      position: toast.POSITION.TOP_CENTER
     });
   };
   
@@ -299,6 +304,7 @@ class App extends Component {
           isOpen={this.state.showInstructions}
           onClose={this.onCloseInstructions}
         />
+        <ToastContainer />
       </div>
 
     );
