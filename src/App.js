@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import { Container, Row, Col } from 'reactstrap';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 // fake data generator
@@ -40,76 +41,147 @@ const getListStyle = isDraggingOver => ({
   width: 250,
 });
 
+const COMMANDS = {
+  forward: {
+    icon: '??',
+    content: 'GO FORWARD'
+  },
+  back: {
+    icon: '??',
+    content: 'GO BACK'
+  },
+  left: {
+    icon: '??',
+    content: 'GO LEFT'
+  },
+  right: {
+    icon: '??',
+    content: 'GO RIGHT'
+  }
+};
+
 class App extends Component {
   state = {
-    commands: [
-      { id: 'forward', content: 'GO FORWARD' },
-      { id: 'back', content: 'GO BACK' },
-      { id: 'left', content: 'GO LEFT' },
-      { id: 'right', content: 'GO RIGHT' }
-    ],
+    commands: Object.keys(COMMANDS).map(k => ({ id: k, ...COMMANDS[k] })),
+    actions: []
   };
 
   onDragEnd = (result) => {
     // dropped outside the list
-    if (!result.destination) {
-      return;
+    if (!result.destination) return;
+
+    // Ignore commands
+    if (result.destination.droppableId === 'commands') return;
+
+    // Add a new command
+    if (
+      result.source.droppableId === 'commands' &&
+      result.destination.droppableId === 'callstack'
+    ) {
+      const { actions, commands } = this.state;
+      const item = {
+        id: `${new Date().getTime()}-${result.draggableId}`,
+        ...COMMANDS[result.draggableId]
+      };
+      actions.splice(result.destination.index, 0, item);
+      this.setState({ actions });
     }
 
-    const commands = reorder(
-      this.state.commands,
-      result.source.index,
-      result.destination.index
-    );
-
-    this.setState({
-      commands,
-    });
+    // Re order call stack
+    if (
+      result.source.droppableId === 'callstack' &&
+      result.destination.droppableId === 'callstack'
+    ) {
+      const actions = reorder(
+        this.state.actions,
+        result.source.index,
+        result.destination.index
+      );
+  
+      this.setState({
+        actions,
+      });
+    }
   }
   
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        
-        <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
-            >
-              {this.state.commands.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
+      <div className="app">
+        <Container fluid>
+          <Row>
+            <DragDropContext onDragEnd={this.onDragEnd}>
+              <Col md={3}>
+                <Droppable droppableId="commands">
                   {(provided, snapshot) => (
-                    <div>
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
-                      >
-                        {item.content}
-                      </div>
-                      {provided.placeholder}
+                    <div
+                      ref={provided.innerRef}
+                      style={getListStyle(snapshot.isDraggingOver)}
+                    >
+                      Commands
+                      {this.state.commands.map((item, index) => (
+                        <Draggable key={item.id} draggableId={item.id} index={index}>
+                          {(provided, snapshot) => (
+                            <div>
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={getItemStyle(
+                                  snapshot.isDragging,
+                                  provided.draggableProps.style
+                                )}
+                              >
+                                {item.content}
+                              </div>
+                              {provided.placeholder}
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
                     </div>
                   )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                </Droppable>
+              </Col>
+              <Col md={9}>
+                <Droppable droppableId="callstack">
+                  {(provided, snapshot) => (
+                    <div
+                    ref={provided.innerRef}
+                    className="d-flex flex-column"
+                    style={{
+                      ...getListStyle(snapshot.isDraggingOver),
+                      width: null
+                    }}
+                    >
+                      <div>Instructions</div>
+                      {console.log(provided, snapshot)}
+                      {this.state.actions.map((item, index) => (
+                        <Draggable key={item.id} draggableId={item.id} index={index}>
+                          {(provided, snapshot) => (
+                            <div>
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={getItemStyle(
+                                  snapshot.isDragging,
+                                  provided.draggableProps.style
+                                )}
+                              >
+                                {item.content}
+                              </div>
+                              {provided.placeholder}
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                    </div>
+                  )}
+                </Droppable>
+              </Col>
+            </DragDropContext>
+         </Row>
+        </Container>
       </div>
     );
   }
