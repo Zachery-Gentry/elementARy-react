@@ -9,6 +9,14 @@ import fire from './fire';
 import Nav from './Nav';
 import Tutorial from './Tutorial';
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faCoffee from '@fortawesome/fontawesome-free-solid/faCoffee'
+import faRight from '@fortawesome/fontawesome-free-solid/faArrowAltCircleRight';
+import faLeft from '@fortawesome/fontawesome-free-solid/faArrowAltCircleLeft';
+import faUp from '@fortawesome/fontawesome-free-solid/faArrowAltCircleUp';
+import faSwitch from '@fortawesome/fontawesome-free-solid/faKey';
+import faCloud from '@fortawesome/fontawesome-free-solid/faCloudUploadAlt';
+import faReset from '@fortawesome/fontawesome-free-solid/faBan';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -46,23 +54,23 @@ const getListStyle = isDraggingOver => ({
 
 const COMMANDS = {
   forward: {
-    icon: '??',
+    icon: faUp,
     content: 'Move Forward',
     label: 'forward'
   },
 
   left: {
-    icon: '??',
+    icon: faLeft,
     content: 'Turn Left',
     label: 'left'
   },
   right: {
-    icon: '??',
+    icon: faRight,
     content: 'Turn Right',
     label: 'right'
   },
   switch: {
-    icon: '??',
+    icon: faSwitch,
     content: 'Flip Switch',
     label: 'switch'
   }
@@ -221,8 +229,11 @@ class App extends Component {
             </Col>
             <Col md="6" className="text-right">
               <h5>Actions</h5>
-                <Button onClick={this.handleClick} color="info">Upload Instructions</Button>{' '}{' '}{' '}
-                <Button onClick={this.deleteClick} color="danger">Remove All Actions</Button>
+                <Button onClick={this.handleClick} color="info">
+                <FontAwesomeIcon icon={faCloud} className="mr-2" />
+                Upload Instructions</Button>{' '}{' '}{' '}
+                <Button onClick={this.deleteClick} color="danger">
+                <FontAwesomeIcon icon={faReset} className="mr-2" />Reset</Button>
             </Col>
           </Row>
           <Row className="pt-4">
@@ -248,6 +259,7 @@ class App extends Component {
                                   provided.draggableProps.style
                                 )}
                               >
+                                <FontAwesomeIcon icon={item.icon} className="mr-2" />
                                 {item.content}
                               </div>
                               {provided.placeholder}
@@ -285,6 +297,7 @@ class App extends Component {
                                   provided.draggableProps.style
                                 )}
                               >
+                                <FontAwesomeIcon icon={item.icon} className="mr-2" />
                                 {item.content}
                               </div>
                               {provided.placeholder}
