@@ -25,7 +25,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   margin: `0 0 ${grid}px 0`,
 
   // change background colour if dragging
-  background: isDragging ? 'lightgreen' : 'grey',
+  background: isDragging ? 'lightgreen' : '#f0ad4e',
 
   // styles we need to apply on draggables
   ...draggableStyle,
@@ -33,7 +33,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 var maze = '1';
 const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? 'lightblue' : 'lightgrey',
+  background: isDraggingOver ? 'lightblue' : '#ffffb0',
   padding: grid,
   width: 250,
 });
@@ -47,13 +47,18 @@ const COMMANDS = {
 
   left: {
     icon: '??',
-    content: 'GO LEFT',
+    content: 'TURN LEFT',
     label: 'left'
   },
   right: {
     icon: '??',
-    content: 'GO RIGHT',
+    content: 'TURN RIGHT',
     label: 'right'
+  },
+  switch: {
+    icon: '??',
+    content: 'FLIP SWITCH',
+    label: 'switch'
   }
 };
 
@@ -66,7 +71,10 @@ var mainStyle = {
   background: "#2b3e50"
 }
 
-
+var buttonStyle = {
+  background: "#A6D340",
+  color: "white"
+}
 
 class App extends Component {
   state = {
@@ -182,7 +190,9 @@ class App extends Component {
         <Container fluid>
           <h2 className="display-3">Where's My CheddAR?</h2>
           <p className="lead">Instructions:</p>
-          <p>Drag and drop to make the mouse move!</p>
+          <p>Click on the Maze Number to choose a mase, default is 1.</p>
+          <p>Drag commands from the Command List to the Instruction List.</p>
+          <p>Press Update to share the new commands to the App.</p>
         </Container>
         </Jumbotron>
       </div> */}
@@ -222,9 +232,9 @@ class App extends Component {
                 </Droppable>
                 <h5>Choose Maze:</h5>
         <ButtonGroup>
-        <Button color="primary" onClick={this.mazeClick1} active={this.state.cSelected.includes(1)}>One</Button>
-          <Button color="primary" onClick={this.mazeClick2} active={this.state.cSelected.includes(2)}>Two</Button>
-          <Button color="primary" onClick={this.mazeClick3} active={this.state.cSelected.includes(3)}>Three</Button>
+        <Button color = "info"onClick={this.mazeClick1} active={this.state.cSelected.includes(1)}>One</Button>
+          <Button color="info" onClick={this.mazeClick2} active={this.state.cSelected.includes(2)}>Two</Button>
+          <Button color="info" onClick={this.mazeClick3} active={this.state.cSelected.includes(3)}>Three</Button>
         </ButtonGroup>
               </Col>
               <Col md={9}>
@@ -265,13 +275,18 @@ class App extends Component {
                   )}
                 </Droppable>
                 <div className="App-button text-center" >
-                <Button onClick={this.handleClick} color="primary">Update!</Button>{' '}{' '}{' '}
-                <Button onClick={this.deleteClick} color="primary">Remove All Actions</Button>
+                <Button onClick={this.handleClick} color="info">Update!</Button>{' '}{' '}{' '}
+                <Button onClick={this.deleteClick} color="danger">Remove All Actions</Button>
                 </div>
               </Col>
             </DragDropContext>
          </Row>
         </Container>
+        <div>
+          <Jumbotron style={mainStyle}>
+
+            </Jumbotron>
+          </div>
       </div>
 
     );
